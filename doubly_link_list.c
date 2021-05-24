@@ -2,13 +2,16 @@
 #include <stdlib.h>
 void display();
 void insertAtBeginning();
+void deleteAtBeginning();
+void deleteAtEnd();
+void deleteAtPosition();
 int length();
 struct node
 {
     int data;
     struct node *prev, *next;
 };
-struct node *head = NULL, *temp;
+struct node *head = NULL, *tail;
 void createLinkList()
 {
     struct node *newnode;
@@ -19,7 +22,7 @@ void createLinkList()
     newnode->next = NULL;
     if (head == NULL)
     {
-        head = temp = newnode;
+        head = tail = newnode;
     }
     else
     {
@@ -31,9 +34,9 @@ void createLinkList()
         temp->next = newnode;
         newnode->prev = temp; */
 
-        temp->next = newnode;
-        newnode->prev = temp;
-        temp = newnode;
+        tail->next = newnode;
+        newnode->prev = tail;
+        tail = newnode;
     }
 }
 void insertAtBeginning()
@@ -46,7 +49,7 @@ void insertAtBeginning()
     newnode->next = 0;
     if (head == NULL)
     {
-        head = temp = newnode;
+        head = tail = newnode;
     }
     else
     {
@@ -65,60 +68,169 @@ void insertAtEnd()
     newnode->next = NULL;
     if (head == NULL)
     {
-        head = temp = newnode;
+        head = tail = newnode;
     }
     else
-    { 
+    {
         // * IMPORTANT => : Time complexity is O(1) // if use while loop then time complexity will be O(n)
-        
-        temp->next = newnode;
-        newnode->prev = temp;
-        temp = newnode;
+
+        tail->next = newnode;
+        newnode->prev = tail;
+        tail = newnode;
     }
 }
 void insertAtPosition()
 {
-    int loc,i=1;;
-    struct node *newnode;
-    newnode=(struct node *)malloc(sizeof(struct node));
-    int len=length();
-    printf("lenth of link list is : %d\n",len);
+    int loc, i = 1;
+    struct node *newnode, *temp;
+    newnode = (struct node *)malloc(sizeof(struct node));
+    int len = length();
+    printf("lenth of link list is : %d\n", len);
     printf("\nEnter the location you want to insert : ");
-    scanf("%d",&loc);
-    if(loc < i || loc>len)
+    scanf("%d", &loc);
+    if (loc < i || loc > len)
     {
         printf("\nInvalid Entry");
     }
-    else if(loc==1)
+    else if (loc == 1)
     {
         insertAtBeginning();
     }
     else
     {
-        temp=head;
+        temp = head;
         printf("Enter the number : ");
-        scanf("%d",&newnode->data);
-        while(i<loc -1)
+        scanf("%d", &newnode->data);
+        while (i < loc - 1)
         {
-            temp=temp->next;
+            temp = temp->next;
             i++;
         }
-        newnode->prev=temp;
-        newnode->next=temp->next;
-        temp->next=newnode;
-        newnode->next->prev=newnode;
+        newnode->prev = temp;
+        newnode->next = temp->next;
+        temp->next = newnode;
+        newnode->next->prev = newnode;
     }
 }
+void insertAfterPosition()
+{
+    int loc, i = 1;
+    ;
+    struct node *newnode, *temp;
+    newnode = (struct node *)malloc(sizeof(struct node));
+    int len = length();
+    printf("lenth of link list is : %d\n", len);
+    printf("\nEnter the location you want to insert : ");
+    scanf("%d", &loc);
+    if (loc < i || loc > len)
+    {
+        printf("\nInvalid Entry");
+    }
+    else if (loc == len)
+    {
+        insertAtEnd();
+    }
+    else
+    {
+        temp = head;
+        printf("Enter the number : ");
+        scanf("%d", &newnode->data);
+        while (i < loc)
+        {
+            temp = temp->next;
+            i++;
+        }
+        newnode->prev = temp;
+        newnode->next = temp->next;
+        temp->next = newnode;
+        newnode->next->prev = newnode;
+    }
+}
+void deleteAtBeginning()
+{
+    struct node *temp;
+    if (head == NULL)
+    {
+        printf("\nList is empty\n");
+    }
+    else if (head->next == NULL)
+    {
+        head = NULL;
+        free(head);
+    }
+    else
+    {
+        temp = head;
+        head = head->next;
+        head->prev = NULL; //temp->next=NULL
+        free(temp);
+    }
+}
+void deleteAtEnd()
+{
+    struct node *temp;
+    if (head == NULL)
+    {
+        printf("List is empty");
+    }
+    else
+    {
+        temp = tail;
+        tail->prev->next = NULL;
+        tail = tail->prev;
+        free(temp);
+    }
+}
+
+void deleteAtIndex()
+{
+    int loc, i = 1;
+    struct node *temp;
+    int len = length();
+    printf("lenth of link list is : %d\n", len);
+    printf("\nEnter the location you want to delete : ");
+    scanf("%d", &loc);
+    if (loc < i || loc > len)
+    {
+        printf("\nInvalid Entry");
+    }
+    else if (loc == 1)
+    {
+        deleteAtBeginning();
+    }
+    else
+    {
+        temp = head;
+        while (i < loc)
+        {
+            temp = temp->next;
+            i++;
+        }
+        if (temp->next == NULL)
+        {
+            tail = tail->prev;
+            tail->next = NULL;
+            free(temp);
+        }
+        else
+        {
+            temp->prev->next = temp->next;
+            temp->next->prev = temp->prev;
+            free(temp);
+        }
+    }
+}
+
 int length()
 {
     struct node *temp;
-    int count =0;
-        temp = head;
-        while (temp != NULL)
-        {
-            temp = temp->next;
-            count++;
-        }
+    int count = 0;
+    temp = head;
+    while (temp != NULL)
+    {
+        temp = temp->next;
+        count++;
+    }
     return count;
 }
 
@@ -146,8 +258,12 @@ int menu()
     printf("\n2. Insert or Add element in Beginning doubly link list");
     printf("\n3. Insert or Add element at the End doubly link list");
     printf("\n4. Insert or Add element at the position doubly link list");
-    printf("\n5. display doubly link list");
-    printf("\n6. End the program\n");
+    printf("\n5. Insert or Add element After position doubly link list");
+    printf("\n6. delete element at the Beginning doubly link list");
+    printf("\n7. delete element at the end doubly link list");
+    printf("\n8. delete element at the Location doubly link list");
+    printf("\n9. display doubly link list");
+    printf("\n10. End the program\n");
     printf("\n Enter Your choice : ");
     scanf("%d", &choice);
     return choice;
@@ -172,9 +288,21 @@ int main()
             insertAtPosition();
             break;
         case 5:
-            display();
+            insertAfterPosition();
             break;
         case 6:
+            deleteAtBeginning();
+            break;
+        case 7:
+            deleteAtEnd();
+            break;
+        case 8:
+            deleteAtIndex();
+            break;
+        case 9:
+            display();
+            break;
+        case 10:
             exit(0);
             break;
         default:

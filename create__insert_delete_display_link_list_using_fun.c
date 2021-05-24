@@ -66,6 +66,8 @@ void insertAtIndex()
     int index, i = 1;
     int count = countfunction();
     printf("count = %d\n", count);
+    printf("Enter the index where you want to insert node in the link list : ");
+    scanf("%d", &index);
     Newnode = (struct node *)malloc(sizeof(struct node));
     if (Head == NULL)
     {
@@ -73,31 +75,26 @@ void insertAtIndex()
     }
     else
     {
-        printf("Enter the index where you want to insert node in the link list : ");
-        scanf("%d", &index);
-        if (index == 0)
+        if (index < i || index > count)
+        {
+            printf("invalid index");
+        }
+        else if (index == 1)
         {
             insertAtBeginning();
         }
         else
         {
-            if (index > count)
+            temp = Head;
+            while (i < index - 1)
             {
-                printf("invalid index");
+                temp = temp->next;
+                i++;
             }
-            else
-            {
-                temp = Head;
-                while (i < index)
-                {
-                    temp = temp->next;
-                    i++;
-                }
-                printf("\nEnter the element in the List: ");
-                scanf("%d", &Newnode->data);
-                Newnode->next = temp->next;
-                temp->next = Newnode;
-            }
+            printf("\nEnter the element in the List: ");
+            scanf("%d", &Newnode->data);
+            Newnode->next = temp->next;
+            temp->next = Newnode;
         }
     }
 }
@@ -154,37 +151,32 @@ void deleteAtIndex()
     int index, i = 1;
     int count = countfunction();
     printf("count = %d\n", count);
+    printf("\nEnter the index you want to delete: ");
+    scanf("%d", &index);
     if (Head == NULL)
     {
         printf("\nList is empty\n");
     }
+    if (index < i || index > count)
+    {
+        printf("\nInvalid Entry");
+    }
+    else if (index == 1)
+    {
+
+        deleteAtBeginning();
+    }
     else
     {
-        printf("\nEnter the index you want to delete: ");
-        scanf("%d", &index);
-        if (index == 0)
+        temp = Head;
+        while (i < index - 1)
         {
-            deleteAtBeginning();
+            temp = temp->next;
+            i++;
         }
-        else
-        {
-            if (index > count)
-            {
-                printf("invalid index");
-            }
-            else
-            {
-                temp = Head;
-                while (i < index - 1)
-                {
-                    temp = temp->next;
-                    i++;
-                }
-                nextnode = temp->next;
-                temp->next = nextnode->next;
-                free(nextnode);
-            }
-        }
+        nextnode = temp->next;
+        temp->next = nextnode->next;
+        free(nextnode);
     }
 }
 void reverse()
@@ -205,7 +197,7 @@ void reverse()
 void search()
 {
     struct node *temp;
-    int value, count = 0,flag;
+    int value, count = 0, flag;
     printf("\nEnter the number you want to search in link list\n");
     scanf("%d", &value);
     if (Head == NULL)
@@ -220,16 +212,16 @@ void search()
             if (temp->data == value)
             {
                 printf("\nElement %d found at index %d\n", value, count);
-                flag=0;
+                flag = 0;
             }
             else
             {
-                flag=1;
+                flag = 1;
             }
             temp = temp->next;
             count++;
         }
-        if(flag==1)
+        if (flag == 1)
         {
             printf("\nElement not found in the list\n");
         }
@@ -244,7 +236,7 @@ void Display()
     }
     else
     {
-        int count = 0;
+        int count = 1;
         temp = Head;
         while (temp != NULL)
         {

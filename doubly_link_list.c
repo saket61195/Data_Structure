@@ -220,6 +220,21 @@ void deleteAtIndex()
         }
     }
 }
+void reverse()
+{
+    struct node * current,*nextnode;
+    current=head;
+    while(current!=NULL)
+    {
+    nextnode=current->next;
+    current->next=current->prev;
+    current->prev=nextnode;
+    current=nextnode;
+    }
+    current=head;
+    head=tail;
+    tail=current;
+}
 
 int length()
 {
@@ -263,7 +278,8 @@ int menu()
     printf("\n7. delete element at the end doubly link list");
     printf("\n8. delete element at the Location doubly link list");
     printf("\n9. display doubly link list");
-    printf("\n10. End the program\n");
+    printf("\n10. reverse doubly Link List");
+    printf("\n11. End the program\n");
     printf("\n Enter Your choice : ");
     scanf("%d", &choice);
     return choice;
@@ -303,6 +319,9 @@ int main()
             display();
             break;
         case 10:
+            reverse();
+            break;
+        case 11:
             exit(0);
             break;
         default:
